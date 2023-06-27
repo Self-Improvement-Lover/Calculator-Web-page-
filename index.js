@@ -11,22 +11,21 @@
 // use corresponding function on calcualtor to calculate previousopprant, currentOperant with the operant
 // then call .getTotal()
 
-const screen = document.getElementById("screen");
+const screen = document.querySelector("#screen");
 const numbers = document.querySelectorAll("[numbersToPress]");
-const operationButtons = document.querySelectorAll("#operationButtons");
+const operationButtons = document.querySelectorAll(".operationButtons");
 const equalsButton = document.querySelector("#equalsButton");
 const clearButton = document.querySelector("#clearButton");
-const previousAnsButton = document.querySelector("#previousAnswerButton");
 const historyButton = document.querySelector("#getHistory");
+const decimalButton = document.querySelector("#decimalButton");
 let secondValue = "";
 let operant = "";
-let histroyShowing = true;
 let currentValue = 0;
-let operantCounter = 0;
+let operantPressed = 0;
 
-const calcualtor = new Calculator();
+const calculator = new Calculator();
 
-function returnValueOfOpperation() {
+function returnValueOfOperation() {
   if (screen.value === "" || screen.value === ".") return;
 
   if (secondValue.includes(".")) {
@@ -37,24 +36,24 @@ function returnValueOfOpperation() {
 
   switch (operant) {
     case "+":
-      calcualtor.add(currentValue);
-      screen.value = calcualtor.getTotal();
+      calculator.add(currentValue);
+      screen.value = calculator.getTotal();
       break;
     case "-":
-      calcualtor.subtract(currentValue);
-      screen.value = calcualtor.getTotal();
+      calculator.subtract(currentValue);
+      screen.value = calculator.getTotal();
       break;
     case "*":
-      calcualtor.multiply(currentValue);
-      screen.value = calcualtor.getTotal();
+      calculator.multiply(currentValue);
+      screen.value = calculator.getTotal();
       break;
     case "/":
-      calcualtor.divide(currentValue);
-      screen.value = calcualtor.getTotal();
+      calculator.divide(currentValue);
+      screen.value = calculator.getTotal();
       break;
     case "^":
-      calcualtor.power(currentValue);
-      screen.value = calcualtor.getTotal();
+      calculator.power(currentValue);
+      screen.value = calculator.getTotal();
       break;
     default:
       return currentValue;
@@ -62,77 +61,46 @@ function returnValueOfOpperation() {
 }
 
 clearButton.addEventListener("click", () => {
-  document.getElementById("screen").value = "";
+  screen.value = "";
   secondValue = "";
   operationClicked = false;
-  histroyShowing = false;
-  operantCounter = 0;
-  calcualtor.clear();
-});
-
-previousAnsButton.addEventListener("click", () => {
-  calcualtor.undo();
-  const previousTotal = calcualtor.totalArr[calcualtor.totalArr.length - 1];
-  if (previousTotal === undefined) {
-    screen.value = "";
-  } else {
-    screen.value = previousTotal;
-  }
-});
-
-historyButton.addEventListener("click", () => {
-  screen.value = calcualtor.getHistory();
-  histroyShowing = true;
+  operantPressed = 0;
+  calculator.clear();
 });
 
 numbers.forEach((button) => {
   button.addEventListener("click", () => {
-    if (screen.value === "" && button.innerText === ".") {
-      screen.value = "0.";
+    if (operantPressed) {
+      secondValue += button.innerText;
+      screen.value = button.innerText;
+      operantPressed--;
+    } else {
+      screen.value = screen.value + button.innerText;
+      secondValue += button.innerText;
     }
-    if (button.innerText === "." && screen.value.includes(".")) return;
-
-    if (histroyShowing) {
-      screen.value = "";
-      histroyShowing = false;
-    }
-
-    screen.value = screen.value + button.innerText;
-    secondValue += button.innerText;
   });
 });
 
 operationButtons.forEach((button) => {
   button.addEventListener("click", () => {
     if (screen.value === "") return;
-    if (histroyShowing) return;
-
-    if (Array.isArray(screen.value)) return;
-
-    if (
-      screen.value.toString()[screen.value.length - 1] === "*" ||
-      screen.value.toString()[screen.value.length - 1] === "+" ||
-      screen.value.toString()[screen.value.length - 1] === "-" ||
-      screen.value.toString()[screen.value.length - 1] === "^" ||
-      screen.value.toString()[screen.value.length - 1] === "/"
-    ) {
-      return;
-    } else if (operantCounter >= 1) {
-      returnValueOfOpperation();
-      screen.value = screen.value + button.innerText;
-      operant = button.innerText;
-      secondValue = "";
-    } else {
-      operantCounter++;
-      calcualtor.total = parseFloat(screen.value.toString());
-      screen.value = screen.value + button.innerText;
-      operant = button.innerText;
-      secondValue = "";
-    }
+    operantPressed = true;
+    calculator.total = parseFloat(screen.value.toString());
+    operant = button.innerText;
+    secondValue = "";
   });
 });
 
+decimalButton.addEventListener("click", () => {
+  if (decimalButton.innerText === "." && screen.value.includes(".")) return;
+  if (screen.value === "" && decimalButton.innerText === ".") {
+    screen.value = "0.";
+  } else {
+    screen.value = screen.value + decimalButton.innerText;
+  }
+});
+
 equalsButton.addEventListener("click", () => {
-  operantCounter = 0;
-  returnValueOfOpperation();
+  operantPressed = 0;
+  returnValueOfOperation();
 });
