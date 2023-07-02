@@ -11,18 +11,23 @@
 // use corresponding function on calcualtor to calculate previousopprant, currentOperant with the operant
 // then call .getTotal()
 
-const screen = document.querySelector("#screen");
-const numbers = document.querySelectorAll("[numbersToPress]");
-const operationButtons = document.querySelectorAll(".operationButtons");
-const equalsButton = document.querySelector("#equalsButton");
-const clearButton = document.querySelector("#clearButton");
-const historyButton = document.querySelector("#getHistory");
-const decimalButton = document.querySelector("#decimalButton");
-let secondValue = "";
-let operant = "";
-let currentValue = 0;
-let operantPressed = 0;
 
+// if operand is clicked more than once, calcualte the calculaotr.total for previous operation 
+// save operand, the numbers pressed afterwards is second vsalue and if equals is pressed return calculator.total + second value 
+// else if another operation, just get that calculator total as well and just put button pressed and repeat cycle 
+// when equals button is pressed, operantcounter is set back to 0
+const screen = document.querySelector("#screen");
+const numbers = document.querySelectorAll(".numbers-to-press");
+const operationButtons = document.querySelectorAll(".operation-buttons");
+const equalsButton = document.querySelector("#equals-button");
+const clearButton = document.querySelector("#clear-button");
+const historyButton = document.querySelector("#getHistory");
+const decimalButton = document.querySelector("#decimal-button");
+let secondValue = "";
+let operand = "";
+let currentValue = 0;
+let operandPressed = false; // changed opeant pressed from 0 to false, 1 to true
+let timesOperandUsed = 0
 const calculator = new Calculator();
 
 function returnValueOfOperation() {
@@ -34,7 +39,7 @@ function returnValueOfOperation() {
     currentValue = parseInt(secondValue);
   }
 
-  switch (operant) {
+  switch (operand) {
     case "+":
       calculator.add(currentValue);
       screen.value = calculator.getTotal();
@@ -63,19 +68,19 @@ function returnValueOfOperation() {
 clearButton.addEventListener("click", () => {
   screen.value = "";
   secondValue = "";
-  operationClicked = false;
-  operantPressed = 0;
+  timesOperandUsed = 0
+  operandPressed = false;
   calculator.clear();
 });
 
 numbers.forEach((button) => {
   button.addEventListener("click", () => {
-    if (operantPressed) {
+    if (operandPressed) {
       secondValue += button.innerText;
       screen.value = button.innerText;
-      operantPressed--;
+      operandPressed = false;
     } else {
-      screen.value = screen.value + button.innerText;
+      screen.value += button.innerText;
       secondValue += button.innerText;
     }
   });
@@ -83,17 +88,25 @@ numbers.forEach((button) => {
 
 operationButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    if (screen.value === "") return;
-    operantPressed = true;
-    calculator.total = parseFloat(screen.value.toString());
-    operant = button.innerText;
-    secondValue = "";
+    if (screen.value === "") return; 
+    timesOperandUsed++
+    operandPressed = true; 
+    if (timesOperandUsed > 1){
+      returnValueOfOperation()
+    } 
+
+      calculator.total = parseFloat(screen.value.toString());
+      operand = button.innerText;
+      secondValue = "";
+    
+
+   
   });
 });
 
 decimalButton.addEventListener("click", () => {
   if (decimalButton.innerText === "." && screen.value.includes(".")) return;
-  if (screen.value === "" && decimalButton.innerText === ".") {
+  if (screen.value === "") {
     screen.value = "0.";
   } else {
     screen.value = screen.value + decimalButton.innerText;
@@ -101,6 +114,7 @@ decimalButton.addEventListener("click", () => {
 });
 
 equalsButton.addEventListener("click", () => {
-  operantPressed = 0;
+  timesOperandUsed = 0
+  operandPressed = false
   returnValueOfOperation();
 });
