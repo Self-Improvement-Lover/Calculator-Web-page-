@@ -1,4 +1,3 @@
-
 const screen = document.getElementById("screen");
 const numbers = document.querySelectorAll(".numbers-to-press");
 const operationButtons = document.querySelectorAll(".operation-buttons");
@@ -13,7 +12,6 @@ let timesOperandUsed = 0;
 let equalsButtonPurposelyPressed = false;
 let nothingHappened = true;
 const calculator = new Calculator();
-
 
 function returnValueOfOperation() {
   if (screen.value === "" || screen.value === ".") return;
@@ -55,7 +53,7 @@ numbers.forEach((button) => {
     if (screen.value === "0" && operantPressed === false) {
       screen.value = "";
     }
- // After you purposly press equalls button, you get an answer but then you can change that answer
+    // After you purposly press equalls button, you get an answer but then you can change that answer
     if (equalsButtonPurposelyPressed) {
       screen.value = "";
       secondValue = "";
