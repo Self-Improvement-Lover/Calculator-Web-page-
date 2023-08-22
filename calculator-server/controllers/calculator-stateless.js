@@ -15,7 +15,7 @@ const answer = (req, res) => {
     return;
   }
 
-  if (operand1 !== 0 && operand2 !== 0 && !(operand1 || operand2)) {
+  if (operand1 === undefined || operand2 === undefined) {
     res.status(400).json({ error: "Please enter operands" });
     return;
   }
@@ -52,7 +52,7 @@ const answer = (req, res) => {
   }
 
   const total = calculator.getTotal();
-  // have to wait for operation to occur, before we can get total
+
   if (total === "ERROR") {
     res.status(400).json({ error: "Cannot divide by Zero" });
     return;

@@ -52,13 +52,16 @@ clearButton.addEventListener("click", () => {
 
 numbers.forEach((button) => {
   button.addEventListener("click", () => {
-    // if first number entered is 0. something,then an operandButton is pressed,then number, then we need to make screen.value reset to ''
+    // if first number entered is 0. something,then an operandButton is pressed,then number,
+    //then we need to make screen.value reset to ''
+    /*
     if (screen.value[0] === "0" && screen.value[1] === ".") {
       screen.value = "";
       screen.value += button.innerText;
       secondValue += button.innerText;
       return;
     }
+    */
 
     if (screen.value === "0" && operandPressed === false) {
       screen.value = "";
@@ -70,7 +73,7 @@ numbers.forEach((button) => {
     }
 
     // if when second number entered is at 0., then number button is pressed, we dont want screen value to be reset,
-    //  we want the number button pressed to be concatnated to the 0.
+    //  we want the number button pressed to be concatenated to the 0.
     if (operandPressed && screen.value === "0.") {
       operandPressed = false;
     } else if (operandPressed) {
@@ -96,7 +99,6 @@ operandButtons.forEach((button) => {
     if (timesOperandUsed > 1) {
       returnValueOfOperation();
     }
-    // if its already 0 on screen, then you choose to enter an operant, then number
 
     calculator.total = parseFloat(screen.value.toString());
 
@@ -122,11 +124,10 @@ decimalButton.addEventListener("click", () => {
 });
 
 equalsButton.addEventListener("click", () => {
-  // the point of second value is to be able to check that screen.value should be reset on next button clicked
   if (nothingHappened === true) {
     return;
   }
-
+  // the point of second value is to be able to check that screen.value should be reset on next button clicked
   if (operandPressed === true && secondValue === "") {
     return;
   }
