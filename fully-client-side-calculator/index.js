@@ -5,21 +5,28 @@ const equalsButton = document.getElementById("equalsButton");
 const clearButton = document.getElementById("clearButton");
 const decimalButton = document.getElementById("decimalButton");
 let secondValue = "";
-let operand = "";
+let operation = "";
 let currentValue = 0;
-let operandPressed = false;
+let operandWasLastClicked = false;
 let timesOperandUsed = 0;
 let equalsButtonPurposelyPressed = false;
-let nothingHappened = true;
+
 const calculator = new Calculator();
 
+function clear() {
+  screen.value = "0";
+  secondValue = "";
+  timesOperandUsed = 0;
+  operandWasLastClicked = false;
+  equalsButtonPurposelyPressed = false;
+}
 function returnValueOfOperation() {
   if (screen.value === "") {
     return;
   }
   currentValue = parseFloat(secondValue);
 
-  switch (operand) {
+  switch (operation) {
     case "+":
       calculator.add(currentValue);
       break;
@@ -41,29 +48,13 @@ function returnValueOfOperation() {
 }
 
 clearButton.addEventListener("click", () => {
-  screen.value = "0";
-  secondValue = "";
-  timesOperandUsed = 0;
-  operandPressed = false;
-  equalsButtonPurposelyPressed = false;
-  nothingHappened = true;
+  clear();
   calculator.clear();
 });
 
 numbers.forEach((button) => {
   button.addEventListener("click", () => {
-    // if first number entered is 0. something,then an operandButton is pressed,then number,
-    //then we need to make screen.value reset to ''
-    /*
-    if (screen.value[0] === "0" && screen.value[1] === ".") {
-      screen.value = "";
-      screen.value += button.innerText;
-      secondValue += button.innerText;
-      return;
-    }
-    */
-
-    if (screen.value === "0" && operandPressed === false) {
+    if (screen.value === "0" && operandWasLastClicked === false) {
       screen.value = "";
     }
     // After you purposly press equalls button, you get an answer but then you can change that answer
@@ -72,13 +63,13 @@ numbers.forEach((button) => {
       secondValue = "";
     }
 
-    // if when second number entered is at 0., then number button is pressed, we dont want screen value to be reset,
+    // if when second number entered is at 0., then number button is pressed, we don't want screen value to be reset,
     //  we want the number button pressed to be concatenated to the 0.
-    if (operandPressed && screen.value === "0.") {
-      operandPressed = false;
-    } else if (operandPressed) {
+    if (operandWasLastClicked && screen.value === "0.") {
+      operandWasLastClicked = false;
+    } else if (operandWasLastClicked) {
       screen.value = "";
-      operandPressed = false;
+      operandWasLastClicked = false;
     }
     screen.value += button.innerText;
     secondValue += button.innerText; // secondValue was already reset when an operation button was clicked
@@ -87,29 +78,29 @@ numbers.forEach((button) => {
 
 operandButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    // if an operand is pressed twice or more times in a row
     nothingHappened = false;
-    if (operandPressed) {
-      operand = button.innerText;
+    // if an operand is pressed twice or more times in a row
+    if (operandWasLastClicked) {
+      operation = button.innerText;
       return;
     }
 
     timesOperandUsed++;
-    operandPressed = true;
+    operandWasLastClicked = true;
     if (timesOperandUsed > 1) {
       returnValueOfOperation();
     }
 
     calculator.total = parseFloat(screen.value.toString());
 
-    operand = button.innerText;
+    operation = button.innerText;
 
     secondValue = "";
   });
 });
 
 decimalButton.addEventListener("click", () => {
-  if (operandPressed) {
+  if (operandWasLastClicked) {
     secondValue = "0.";
     screen.value = "0.";
     return;
@@ -124,17 +115,14 @@ decimalButton.addEventListener("click", () => {
 });
 
 equalsButton.addEventListener("click", () => {
-  if (nothingHappened === true) {
-    return;
-  }
   // the point of second value is to be able to check that screen.value should be reset on next button clicked
-  if (operandPressed === true && secondValue === "") {
+  if (operandWasLastClicked === true && secondValue === "") {
     return;
   }
 
   equalsButtonPurposelyPressed = true;
   timesOperandUsed = 0;
-  operandPressed = false;
+  operandWasLastClicked = false;
   nothingHappened = false;
 
   returnValueOfOperation();
