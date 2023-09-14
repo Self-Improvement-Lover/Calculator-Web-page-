@@ -19,15 +19,20 @@ describe("Fully Client Side Calculator", () => {
 
   it("3 + 3 = should print 6", async () => {
     calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
     calculator.plus.press();
+    expect(calculator.screen.value).toEqual("3");
     calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
     calculator.equals.press();
     expect(calculator.screen.value).toEqual("6");
   });
 
   it("3 + 6 should say 6", async () => {
     calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
     calculator.plus.press();
+    expect(calculator.screen.value).toEqual("3");
     calculator.number6.press();
     expect(calculator.screen.value).toEqual("6");
   });
