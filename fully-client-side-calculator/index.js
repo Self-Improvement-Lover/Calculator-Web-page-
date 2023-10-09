@@ -89,7 +89,7 @@ function initialiseCalculator(Calculator, document) {
       if (screen.value === "0" && operandWasLastClicked === false) {
         screen.value = "";
       }
-      // After you purposly press equalls button, you get an answer but then you can change that answer
+      // After you purposely press equals button, you get an answer but then you can change that answer
       if (equalsButtonPurposelyPressed) {
         screen.value = "";
         secondValue = "";
