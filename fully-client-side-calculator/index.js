@@ -42,7 +42,7 @@ function initialiseCalculator(Calculator, document) {
   let operandWasLastClicked = false;
   let timesOperandUsed = 0;
   let equalsButtonPurposelyPressed = false;
-
+  let operandButtonEverClicked = false;
   const calculator = new Calculator();
 
   function clear() {
@@ -51,6 +51,7 @@ function initialiseCalculator(Calculator, document) {
     timesOperandUsed = 0;
     operandWasLastClicked = false;
     equalsButtonPurposelyPressed = false;
+    operandButtonEverClicked = false;
   }
   function returnValueOfOperation() {
     if (screen.value === "") {
@@ -75,7 +76,10 @@ function initialiseCalculator(Calculator, document) {
         calculator.power(currentValue);
         break;
     }
-
+    // when you just have one value inputted, but no operand and second value we still just want to keep screen.value to the first value
+    if (screen.value !== "" && !operandButtonEverClicked) {
+      return;
+    }
     screen.value = calculator.getTotal();
   }
 
@@ -84,7 +88,7 @@ function initialiseCalculator(Calculator, document) {
     calculator.clear();
   });
 
-  numbers.forEach(button => {
+  numbers.forEach((button) => {
     button.addEventListener("click", () => {
       if (screen.value === "0" && operandWasLastClicked === false) {
         screen.value = "";
@@ -97,9 +101,7 @@ function initialiseCalculator(Calculator, document) {
 
       // if when second number entered is at 0., then number button is pressed, we don't want screen value to be reset,
       //  we want the number button pressed to be concatenated to the 0.
-      if (operandWasLastClicked && screen.value === "0.") {
-        operandWasLastClicked = false;
-      } else if (operandWasLastClicked) {
+      if (operandWasLastClicked) {
         screen.value = "";
         operandWasLastClicked = false;
       }
@@ -108,9 +110,8 @@ function initialiseCalculator(Calculator, document) {
     });
   });
 
-  operandButtons.forEach(button => {
+  operandButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      nothingHappened = false;
       // if an operand is pressed twice or more times in a row
       if (operandWasLastClicked) {
         operation = button.innerText;
@@ -119,6 +120,7 @@ function initialiseCalculator(Calculator, document) {
 
       timesOperandUsed++;
       operandWasLastClicked = true;
+      operandButtonEverClicked = true;
       if (timesOperandUsed > 1) {
         returnValueOfOperation();
       }
@@ -155,7 +157,6 @@ function initialiseCalculator(Calculator, document) {
     equalsButtonPurposelyPressed = true;
     timesOperandUsed = 0;
     operandWasLastClicked = false;
-    nothingHappened = false;
 
     returnValueOfOperation();
   });
