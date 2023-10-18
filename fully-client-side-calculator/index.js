@@ -54,9 +54,7 @@ function initialiseCalculator(Calculator, document) {
     operandButtonEverClicked = false;
   }
   function returnValueOfOperation() {
-    if (screen.value === "") {
-      return;
-    }
+   
     currentValue = parseFloat(secondValue);
 
     switch (operation) {
@@ -90,9 +88,9 @@ function initialiseCalculator(Calculator, document) {
 
   numbers.forEach((button) => {
     button.addEventListener("click", () => {
-      if (screen.value === "0" && operandWasLastClicked === false) {
+       if (screen.value === "0" && operandWasLastClicked === false) {
         screen.value = "";
-      }
+      } 
       // After you purposely press equals button, you get an answer but then you can change that answer
       if (equalsButtonPurposelyPressed) {
         screen.value = "";
@@ -101,10 +99,19 @@ function initialiseCalculator(Calculator, document) {
 
       // if when second number entered is at 0., then number button is pressed, we don't want screen value to be reset,
       //  we want the number button pressed to be concatenated to the 0.
+      if (screen.value === "0."){
+        screen.value += button.innerText;
+        secondValue += button.innerText;
+        return 
+      }
+
+
       if (operandWasLastClicked) {
         screen.value = "";
         operandWasLastClicked = false;
       }
+
+   
       screen.value += button.innerText;
       secondValue += button.innerText; // secondValue was already reset when an operation button was clicked
     });

@@ -37,16 +37,27 @@ describe("Fully Client Side Calculator", () => {
     expect(calculator.screen.value).toEqual("6");
   });
 
-  it("9/3 should print 3", async () => {
+  it("9/2 should print 4.5", async () => {
     calculator.number9.press();
     expect(calculator.screen.value).toEqual("9");
     calculator.divide.press();
     expect(calculator.screen.value).toEqual("9");
-    calculator.number3.press();
-    expect(calculator.screen.value).toEqual("3");
+    calculator.number2.press();
+    expect(calculator.screen.value).toEqual("2");
     calculator.equals.press();
-    expect(calculator.screen.value).toEqual("3");
+    expect(calculator.screen.value).toEqual("4.5");
   });
+
+    it("3/0 =  should print ERROR", async () => {
+      calculator.number3.press();
+      expect(calculator.screen.value).toEqual("3");
+      calculator.divide.press();
+      expect(calculator.screen.value).toEqual("3");
+      calculator.number0.press();
+      expect(calculator.screen.value).toEqual("0");
+      calculator.equals.press();
+      expect(calculator.screen.value).toEqual("ERROR");
+    });
 
   it("3*3 =  should print 9", async () => {
     calculator.number3.press();
@@ -85,6 +96,21 @@ describe("Fully Client Side Calculator", () => {
     expect(calculator.screen.value).toEqual("2");
     calculator.equals.press();
     expect(calculator.screen.value).toEqual("729");
+  });
+
+  it("3 * 3 * 3 = should print 27", async () => {
+    calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
+    calculator.multiply.press();
+    expect(calculator.screen.value).toEqual("3");
+    calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
+    calculator.multiply.press();
+    expect(calculator.screen.value).toEqual("9");
+    calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
+    calculator.equals.press();
+    expect(calculator.screen.value).toEqual("27");
   });
 
   it("9 - 3 = should print 6", async () => {
@@ -205,7 +231,7 @@ describe("Fully Client Side Calculator", () => {
     expect(calculator.screen.value).toEqual("0.12");
   });
 
-  it("3 + . should have screen value as 0., then adding it together should print 3 ", async () => {
+  it("3 + . should have screen value as 0., then adding it together should print 3", async () => {
     calculator.number3.press();
     expect(calculator.screen.value).toEqual("3");
     calculator.plus.press();
@@ -214,6 +240,19 @@ describe("Fully Client Side Calculator", () => {
     expect(calculator.screen.value).toEqual("0.");
     calculator.equals.press();
     expect(calculator.screen.value).toEqual("3");
+  });
+
+  it("3 + . 2 = 3.2", async () => {
+    calculator.number3.press();
+    expect(calculator.screen.value).toEqual("3");
+    calculator.plus.press();
+    expect(calculator.screen.value).toEqual("3");
+    calculator.decimal.press();
+    expect(calculator.screen.value).toEqual("0.");
+    calculator.number2.press();
+    expect(calculator.screen.value).toEqual("0.2");
+    calculator.equals.press();
+    expect(calculator.screen.value).toEqual("3.2");
   });
 
   it("3 ++++ 8 = should print 11", async () => {
@@ -252,6 +291,7 @@ describe("Fully Client Side Calculator", () => {
     calculator.plus.press();
     expect(calculator.screen.value).toEqual("4");
     calculator.number2.press();
+    expect(calculator.screen.value).toEqual("2");
     calculator.equals.press();
     expect(calculator.screen.value).toEqual("6");
   });
@@ -317,7 +357,7 @@ describe("Fully Client Side Calculator", () => {
     expect(calculator.screen.value).toEqual("0");
   });
 
-  it(" when a first value is inputed, then operandButton was clicked, then equalsButton is clicked,  then screen.value should still be the first inputted value ", async () => {
+  it(" when a first value is given, then operandButton was clicked, then equalsButton is clicked,  then screen.value should still be the first inputted value ", async () => {
     calculator.number5.press();
     expect(calculator.screen.value).toEqual("5");
     calculator.plus.press();
@@ -339,8 +379,6 @@ describe("Fully Client Side Calculator", () => {
     expect(calculator.screen.value).toEqual("3");
   });
 });
-
-
 
 class CalculatorPageObject {
   constructor(element) {
